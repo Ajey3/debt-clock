@@ -1,0 +1,482 @@
+/* ============================================================
+   THE DEBT CLOCK — style.css
+   All visual styles for the national debt tracker.
+   ============================================================ */
+
+
+/* ---- DESIGN TOKENS ---------------------------------------- */
+:root {
+  --red:    #ff2d2d;
+  --amber:  #ffb800;
+  --dim:    #ff6b00;
+  --bg:     #0a0a0a;
+  --surface:#111;
+  --border: #1e1e1e;
+  --text:   #e8e8e0;
+  --muted:  #555;
+  --green:  #00e676;
+}
+
+
+/* ---- RESET & BASE ----------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+
+/* ---- SCANLINE TEXTURE (CSS-only effect) ------------------- */
+/* Creates a subtle horizontal line pattern over the whole page */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
+}
+
+/* ---- NOISE OVERLAY ---------------------------------------- */
+/* Adds very subtle film grain feel */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px;
+}
+
+
+/* ---- LAYOUT WRAPPER --------------------------------------- */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+
+/* ---- HEADER ----------------------------------------------- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 20px;
+  margin-bottom: 48px;
+}
+
+.site-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--red);
+  letter-spacing: 2px;
+}
+
+/* Animated pulsing dot inside the live badge */
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255,45,45,0.5);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.85);
+    box-shadow: 0 0 0 6px rgba(255,45,45,0);
+  }
+}
+
+
+/* ---- TITLE BLOCK ------------------------------------------ */
+.title-block {
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 7vw, 88px);
+  line-height: 0.92;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+h1 span {
+  color: var(--red);
+}
+
+
+/* ---- MAIN COUNTER ----------------------------------------- */
+.counter-section {
+  margin: 40px 0 48px;
+  padding: 32px 36px;
+  background: linear-gradient(135deg, #0f0f0f, #141414);
+  border: 1px solid #222;
+  border-left: 3px solid var(--red);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle red glow in the top-right corner */
+.counter-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: radial-gradient(ellipse at 80% 50%, rgba(255,45,45,0.04), transparent 70%);
+  pointer-events: none;
+}
+
+.counter-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* The big running number */
+.debt-display {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(28px, 5.5vw, 58px);
+  color: var(--red);
+  letter-spacing: 2px;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(255,45,45,0.25), 0 0 60px rgba(255,45,45,0.08);
+  transition: color 0.1s;
+  white-space: nowrap;
+}
+
+/* Brief color flash when the number ticks over a billion */
+.debt-display.flash {
+  color: #ff6060;
+}
+
+/* Per-citizen / per-taxpayer / GDP ratio row */
+.per-citizen-row {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pi-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.pi-value {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  color: var(--amber);
+}
+
+/* Rate of increase row */
+.rate-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.rate-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+.rate-value {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  color: var(--green);
+}
+
+
+/* ---- SECTION HEADING -------------------------------------- */
+.section-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Horizontal rule that stretches after the heading text */
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+
+/* ---- INDICATORS GRID -------------------------------------- */
+.indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+
+.indicator-card {
+  background: var(--surface);
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+
+.indicator-card:hover {
+  background: #161616;
+}
+
+/* Colored bottom border that animates in on hover */
+.indicator-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent, var(--border));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.indicator-card:hover::before {
+  transform: scaleX(1);
+}
+
+.ic-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.ic-value {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.ic-sub {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+}
+
+.ic-change {
+  margin-top: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+}
+
+.up      { color: var(--red); }
+.down    { color: var(--green); }
+.neutral { color: var(--muted); }
+
+
+/* ---- DECADE BAR CHART ------------------------------------- */
+.bar-section {
+  margin-bottom: 48px;
+}
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-decade {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.bar-track {
+  flex: 1;
+  height: 14px;
+  background: #141414;
+  position: relative;
+  overflow: hidden;
+}
+
+/* The fill inside each bar — width animated via JS */
+.bar-fill {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(to right, rgba(255,45,45,0.8), rgba(255,45,45,0.4));
+  transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  width: 0; /* starts at 0, JS sets the real width */
+}
+
+/* Amber color variant for the "live" current bar */
+.bar-fill.amber {
+  background: linear-gradient(to right, rgba(255,184,0,0.8), rgba(255,184,0,0.4));
+}
+
+.bar-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  width: 70px;
+  flex-shrink: 0;
+}
+
+
+/* ---- MILESTONES TIMELINE ---------------------------------- */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 48px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 160px;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+  gap: 16px;
+}
+
+.timeline-row:last-child {
+  border-bottom: none;
+}
+
+.timeline-row:hover {
+  background: #141414;
+}
+
+.tl-year {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--muted);
+}
+
+.tl-event {
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 300;
+}
+
+.tl-amount {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--amber);
+  text-align: right;
+}
+
+
+/* ---- FOOTER ----------------------------------------------- */
+footer {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-note {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.timestamp {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: #333;
+}
+
+
+/* ---- RESPONSIVE ------------------------------------------- */
+@media (max-width: 600px) {
+  .per-citizen-row     { gap: 20px; }
+  .timeline-row        { grid-template-columns: 60px 1fr; }
+  .tl-amount           { display: none; }
+  header               { flex-direction: column; gap: 12px; }
+}

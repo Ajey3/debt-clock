@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Debt Clock — U.S. National Debt</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+
+    <!-- HEADER -->
+    <header>
+      <div class="site-label">United States // Fiscal Monitor</div>
+      <div class="live-badge">
+        <div class="pulse"></div>
+        LIVE ESTIMATE
+      </div>
+    </header>
+
+    <!-- TITLE BLOCK -->
+    <div class="title-block">
+      <div class="eyebrow">REAL-TIME NATIONAL DEBT TRACKER</div>
+      <h1>The <span>Debt</span><br>Clock</h1>
+    </div>
+
+    <!-- MAIN COUNTER -->
+    <div class="counter-section">
+      <div class="counter-label">TOTAL U.S. NATIONAL DEBT (USD)</div>
+      <div class="debt-display" id="mainDebt">$00,000,000,000,000</div>
+
+      <div class="per-citizen-row">
+        <div class="per-item">
+          <div class="pi-label">DEBT PER CITIZEN</div>
+          <div class="pi-value" id="perCitizen">—</div>
+        </div>
+        <div class="per-item">
+          <div class="pi-label">DEBT PER TAXPAYER</div>
+          <div class="pi-value" id="perTaxpayer">—</div>
+        </div>
+        <div class="per-item">
+          <div class="pi-label">DEBT / GDP RATIO</div>
+          <div class="pi-value" id="debtGDP">—</div>
+        </div>
+      </div>
+
+      <div class="rate-row">
+        <div class="rate-label">INCREASING AT</div>
+        <div class="rate-value" id="rateDisplay">+$3,800,000 / minute</div>
+      </div>
+    </div>
+
+    <!-- KEY INDICATORS -->
+    <div class="section-heading">Key Economic Indicators</div>
+    <div class="indicators-grid">
+
+      <div class="indicator-card" style="--accent: #ff2d2d">
+        <div class="ic-label">Annual Deficit (FY2024)</div>
+        <div class="ic-value" style="color:#ff2d2d">$1.83T</div>
+        <div class="ic-sub">Federal budget shortfall</div>
+        <div class="ic-change up">▲ 8.1% from prior year</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #ffb800">
+        <div class="ic-label">Interest Payments (Annual)</div>
+        <div class="ic-value" style="color:#ffb800">$1.13T</div>
+        <div class="ic-sub">Largest budget line item</div>
+        <div class="ic-change up">▲ Surpassed defense spending</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #00e676">
+        <div class="ic-label">GDP (2024)</div>
+        <div class="ic-value" style="color:#00e676">$29.2T</div>
+        <div class="ic-sub">Gross Domestic Product</div>
+        <div class="ic-change down">▲ 2.8% real growth</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #ff6b00">
+        <div class="ic-label">Debt-to-GDP Ratio</div>
+        <div class="ic-value" style="color:#ff6b00">~122%</div>
+        <div class="ic-sub">Above post-WWII peak</div>
+        <div class="ic-change up">▲ Rising trajectory</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #888">
+        <div class="ic-label">Federal Revenue (FY2024)</div>
+        <div class="ic-value" style="color:#ccc">$4.92T</div>
+        <div class="ic-sub">Total tax receipts</div>
+        <div class="ic-change neutral">— Stable YoY</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #ff2d2d">
+        <div class="ic-label">Federal Spending (FY2024)</div>
+        <div class="ic-value" style="color:#ff2d2d">$6.75T</div>
+        <div class="ic-sub">Total outlays</div>
+        <div class="ic-change up">▲ Gap = new deficit</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #ffb800">
+        <div class="ic-label">10-Yr Treasury Yield</div>
+        <div class="ic-value" style="color:#ffb800" id="treasury">4.25%</div>
+        <div class="ic-sub">Cost of government borrowing</div>
+        <div class="ic-change up">▲ Elevated since 2022</div>
+      </div>
+
+      <div class="indicator-card" style="--accent: #00e676">
+        <div class="ic-label">Unemployment Rate</div>
+        <div class="ic-value" style="color:#00e676">4.1%</div>
+        <div class="ic-sub">Bureau of Labor Statistics</div>
+        <div class="ic-change down">▼ Near historical lows</div>
+      </div>
+
+    </div>
+
+    <!-- DECADE BAR CHART -->
+    <div class="section-heading">Debt by Decade</div>
+    <div class="bar-section">
+      <div class="bar-chart" id="barChart"></div>
+    </div>
+
+    <!-- MILESTONES TIMELINE -->
+    <div class="section-heading">Debt Milestones</div>
+    <div class="timeline">
+
+      <div class="timeline-row">
+        <div class="tl-year">1981</div>
+        <div class="tl-event">Debt crosses $1 Trillion for first time</div>
+        <div class="tl-amount">$1.0T</div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="tl-year">1986</div>
+        <div class="tl-event">Doubled to $2T — Reagan-era tax cuts &amp; defense spending</div>
+        <div class="tl-amount">$2.0T</div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="tl-year">2002</div>
+        <div class="tl-event">$6T — post-9/11 wars, Bush tax cuts begin</div>
+        <div class="tl-amount">$6.2T</div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="tl-year">2008</div>
+        <div class="tl-event">Financial crisis bailouts accelerate borrowing</div>
+        <div class="tl-amount">$10.0T</div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="tl-year">2017</div>
+        <div class="tl-event">$20T — Tax Cuts and Jobs Act signed</div>
+        <div class="tl-amount">$20.2T</div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="tl-year">2020</div>
+        <div class="tl-event">COVID-19 stimulus: +$4T added in one year</div>
+        <div class="tl-amount">$27.8T</div>
+      </div>
+
+      <div class="timeline-row">
+        <div class="tl-year">2023</div>
+        <div class="tl-event">Hits $33T — debt ceiling crisis</div>
+        <div class="tl-amount">$33.0T</div>
+      </div>
+
+      <div class="timeline-row" style="background: #0f0f0f">
+        <div class="tl-year" style="color: var(--red)">NOW</div>
+        <div class="tl-event" style="color: var(--text)">Current running total — climbing $3.8M/minute</div>
+        <div class="tl-amount" id="milestoneNow">$36.2T+</div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-note">
+        Sources: U.S. Treasury, Bureau of Economic Analysis, Congressional Budget Office.
+        Debt figure is a real-time interpolated estimate based on the most recently published
+        total public debt outstanding. The counter increases continuously using the approximate
+        per-second rate of U.S. federal borrowing. Not official government data.
+      </div>
+      <div class="timestamp" id="clockTs">--:--:-- UTC</div>
+    </footer>
+
+  </div><!-- /wrapper -->
+
+  <!-- JavaScript — loaded at end of body so DOM is ready -->
+  <script src="script.js"></script>
+
+</body>
+</html>
