@@ -1,4 +1,4 @@
-# The Debt Clock 🇺🇸
+# The Debt Clock - United States
 
 A real-time, browser-based U.S. National Debt tracker with live interpolated estimates, key economic indicators, historical milestones, and a decade-by-decade bar chart — all rendered in a high-contrast terminal aesthetic.
 
